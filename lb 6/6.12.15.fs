@@ -9,7 +9,7 @@ let rec vvod n =
           let Tail = vvod (n-1)
           Head::Tail
 
-let min a b = if a<b then a else b//Сравнения двух чисел для поиска максимального
+let min a b = if a<b then a else b//Сравнения двух чисел для поиска минимального
 
 let Min list  =  //Поиск минимального элемента списка. Если список пуст возвращает 0
     let rec Min_rec list (func:int->int->int) min = 

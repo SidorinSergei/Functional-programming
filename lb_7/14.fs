@@ -5,7 +5,7 @@ let rec vvod n =
           let Head = System.Convert.ToInt32(System.Console.ReadLine())
           let Tail = vvod (n-1)
           Head::Tail
-// Вывод элемнмтов
+// Вывод элементов
 let rec vivod = function    
     |[]->0
     |h::tail->

@@ -1,37 +1,29 @@
 open System
-let rec readList n = 
-    match n with
-       | 0-> []
-       | _ -> 
-          let Head = System.Console.ReadLine()
-          let Tail = readList (n-1)
-          Head::Tail
+ let readListStr n = 
+    let rec read n list = 
+        match n with 
+        |0-> list 
+        |_->
+            let newList = list @ [Console.ReadLine()]
+            read (n-1) newList
+    read n []
 
-// Вывод элемнмтов
-let rec writeList = function    
-    |[]->0
-    |h::tail->
-        printfn $"{h}"
-        writeList tail
-//1 В порядке увеличения разницы между средним количеством согласных и средним количеством гласных букв в строке
+let rec writelist list=
+    List.iter(fun x->printfn "%O" x) list
+//1 В порядке увеличения разницы между средним количеством соглас-
+//ных и средним количеством гласных букв в строке
 
-let raz List = 
-    let rec rec_raz list new_List = 
-        match list with 
-        |[]->new_List
-        |str::tail ->
-             let razn = (String.length str)/(String.length(String.filter(fun x->x='a'||x='e'||x='y'||x='u'||x='o'||x='i')str))-(String.length str)/(String.length(String.filter(fun x->x<>'a'||x<>'e'||x<>'y'||x<>'u'||x<>'o'||x<>'i')str)) //разницa между средним количеством согласных и средним количеством гласных букв в строке
-             let new_list1 = new_List @[(str,razn)]
-             rec_raz tail new_list1
-    rec_raz List []
+let difference str = 
+    let glasAverage = 
+        Convert.ToSingle(String.length(String. filter (fun x -> x='а' ||x='о'||x='э'|| x='е'||x='и'||x='ы'||x='у'||x='ё'||x='ю'||x='я') str))/ Convert.ToSingle(String.length str)
+    let soglAverage = 
+        Convert.ToSingle(String.length (String. filter (fun x -> not(x='а' ||x='о'||x='э'||x='е'||x='и'||x='ы'||x='у'||x='ё'||x='ю'||x='я')) str)) / Convert.ToSingle(String.length str)
+    //Console.WriteLine(Math.Abs(glasAverage-soglAverage))
+    Math.Abs(glasAverage-soglAverage)
 
+let sortStrByDif strList = List.sortBy (fun x->difference x) strList
 
-let sortList list =
-     let new_list =List.sort (raz list)
-     let List = List.map(fun x->fst(x))new_list
-     List
-
-//6 В порядке увеличения медианного значения выборки строк
+//6.В порядке увеличения медианного значения выборки строк
 //(прошлое медианное значение удаляется из выборки и производится поиск
 //нового медианного значения)
 
@@ -42,22 +34,29 @@ let sortMedian list =
         match list with
         |[]->sortList
         |_ ->
+            //Console.WriteLine("sort");
+            //writelist (List.sort list)
             let nowMed = findMedian list
+            //Console.WriteLine("NowMed = {0}", nowMed)
             let indMed =List.findIndex (fun x->x=nowMed) list
-            let newList = List.filter (fun x -> x<>indMed) list
+            let newList = List.removeAt(indMed) list
             sort newList (sortList @ [nowMed])
     sort list []
             
-let choose n list =
-    match n with 
-    |1-> sortList list
-    |2-> sortMedian list
-
+let choose = function 
+    |1 -> sortStrByDif
+    |2 -> sortMedian
 [<EntryPoint>]
-let main argv =   
-    printfn $"Введите количество строк"
-    let list = readList (System.Convert.ToInt32(System.Console.ReadLine()))
-    printfn"ответ: 
-                   "
-    list|>sortList|>writeList
-    0 // return an integer exit code
+let main argv =
+    printfn "Введите сначала количество строк, а потом строки" 
+    let list = Console.ReadLine()|> Convert.ToInt32 |> readListStr 
+    printfn"Выберите сортировку строк:"
+    printfn"1.Сортировка по увеличения разницы между средним количеством согласных и средним количеством гласных букв в строке"
+    printfn"2.Сортировка по увеличения медианного значения выборки строк"
+    let func = Console.ReadLine() |>Convert.ToInt32 |> choose
+    printfn"Отсортированный список"
+    list |> func |>writelist
+    0
+    
+    
+    

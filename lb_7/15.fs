@@ -11,7 +11,7 @@ let rec vivod = function
     |h::tail->
         printfn $"{h}"
         vivod tail
-let Fun list =   List.fold(fun acc x -> acc+x)0 (List.map(fun x->abs(x))list)/(List.length(list)) 
+let Fun list =  (float)(List.fold(fun acc x -> acc+x)0 (List.map(fun x->abs(x))list))/(float)(List.length(list)) 
 [<EntryPoint>]
 let main argv =
     printfn $"Введите количество элементов"
